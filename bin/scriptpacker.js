@@ -28,9 +28,15 @@ require('yargs') // eslint-disable-line
 				describe: 'Text to prefix the output',
 				type: 'string'
 			})
+			.option('print-paths', {
+				alias: 's',
+				default: true,
+				describe: 'Print source path before source code',
+				type: 'boolean'
+			})
 	}, (argv) => {
 		const packer = new ScriptPacker(argv.input)
-		const out = packer.pack(argv.minify, argv.prefix)
+		const out = packer.pack(argv.minify, argv.prefix, argv['print-paths'])
 		if (!argv.output) {
 			const pathObject = path.parse(argv.input)
 			argv.output = 'packed.' + packer.extension

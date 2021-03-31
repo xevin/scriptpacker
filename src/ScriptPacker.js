@@ -157,7 +157,7 @@ class ScriptPacker {
 		return allModules
 	}
 
-	pack (minify = false, prefix = '') {
+	pack (minify = false, prefix = '', addPaths = true) {
 		const mods = this.allModules()
 
 		// Retrieve all code
@@ -178,14 +178,10 @@ class ScriptPacker {
 		for (let code of codes) {
 			if (!addedCodes.includes(code.md5)) {
 				addedCodes.push(code.md5)
-				switch (this.language) {
-					case 'lua':
-						concat += `-- ${code.name}\n${code.code}`
-					break
-					default:
-						concat += `// ${code.name}\n${code.code}`
-					break
-				}
+
+				const comment = this.language === 'lua' ? '--' : '//'
+				const sourcePath = `${comment} ${code.name}\n`
+				concat += addPaths ? `${sourcePath}${code.code}` : `${code.code}`
 			}
 		}
 
